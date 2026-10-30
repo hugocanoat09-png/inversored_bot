@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "*/10 * * * *"   # cada 10 minutos (GitHub puede retrasarlo un poco)
   workflow_dispatch:          # boton para ejecutarlo a mano
+    inputs:
+      prueba:
+        description: "Modo prueba: resumir ya los ultimos resultados de la primera empresa"
+        type: boolean
+        default: false
 
 permissions:
   contents: write             # para poder guardar estado.json
@@ -15,7 +20,7 @@ concurrency:
 jobs:
   vigilar:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
@@ -28,9 +33,12 @@ jobs:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          PRUEBA: ${{ inputs.prueba }}
         run: python vigilante.py
 
       - name: Guardar lo que ya ha avisado
+        if: ${{ !inputs.prueba }}
         run: |
           git config user.name "vigilante-bot"
           git config user.email "vigilante-bot@users.noreply.github.com"
