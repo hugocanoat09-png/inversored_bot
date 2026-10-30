@@ -1,0 +1,7 @@
+# Una empresa por linea (su ticker de bolsa de EE. UU.)
+# Lo que va despues de # es solo un comentario
+AMZN   # Amazon
+UBER   # Uber
+GILD   # Gilead Sciences
+AVGO   # Broadcom
+NFLX   # Netflix
